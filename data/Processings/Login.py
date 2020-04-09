@@ -1,5 +1,6 @@
-from flask import render_template
-from flask_login import login_user
+import flask
+from flask import render_template, Flask
+from flask_login import login_user, LoginManager
 from flask_wtf import FlaskForm
 from werkzeug.utils import redirect
 from wtforms import PasswordField, BooleanField, SubmitField
@@ -9,6 +10,10 @@ from wtforms.validators import DataRequired
 from data import db_session
 from data.users import User
 
+blueprint = flask.Blueprint('login_api', __name__,
+                            template_folder='data/Pages')
+blueprint.secret_key = 'yandexlyceum_secret_key'
+
 
 class LoginForm(FlaskForm):
     email = EmailField('Почта', validators=[DataRequired()])
@@ -16,6 +21,9 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
 
+
+
+@blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
