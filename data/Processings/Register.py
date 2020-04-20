@@ -24,7 +24,7 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Зарегестрироваться')
 
 
-@blueprint.route('/reqister', methods=['GET', 'POST'])
+@blueprint.route('/register', methods=['GET', 'POST'])
 def reqister():
     form = RegisterForm()
     if form.validate_on_submit():
@@ -37,10 +37,9 @@ def reqister():
                                    form=form,
                                    message="Такой пользователь уже есть")
         user = User(
-            nickname=form.surname.data,
+            nickname=form.nickname.data,
             name=form.name.data,
-            email=form.email.data,
-
+            email=form.email.data
         )
         user.set_password(form.password.data)
         session.add(user)

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ current_user.nickname }}</title>
+    <link rel="stylesheet" href="static/css/style_new_2.css"/>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+</head>
+<body>
+{% if current_user.prof_photo != None %}
+<h3>Фотография не выброна</h3>
+<a class="btn btn-success" href="/sample_file_upload">Выбрать фотографию</a>
+{% else %}
+<h3>Фотографии пока неотображаятся</h3>
+<a class="btn btn-success" href="/sample_file_upload">Выбрать другую фотографию</a>
+{% endif %}
+<a class="btn btn-primary " href="/perspage">Изменить данные пользователя</a>
+<a class="btn btn-success " href="/">Вернутся к ленте новостей</a>
+<a class="btn btn-primary " href="/perspage">Создать пост</a>
+<a class="btn btn-success " href="/logout">Выйти из аккаунта</a>
+</body>
+</html>
