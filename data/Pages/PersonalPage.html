@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ current_user.nickname }}</title>
-    <link rel="stylesheet" href="static/css/style_new_2.css"/>
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    <link rel="stylesheet" href="static/css/style_new_2.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
 </head>
 <body>
+<nav class="navbar" style="background-color: #c0c0c0;">
+    <h1>Social Network for Artists and Connoisseurs</h1>
+</nav>
 {% if current_user.prof_photo != None %}
-<h3>Фотография не выброна</h3>
-<a class="btn btn-success" href="/sample_file_upload">Выбрать фотографию</a>
-{% else %}
-<h3>Фотографии пока неотображаятся</h3>
-<a class="btn btn-success" href="/sample_file_upload">Выбрать другую фотографию</a>
-{% endif %}
-<a class="btn btn-primary " href="/perspage">Изменить данные пользователя</a>
-<a class="btn btn-success " href="/">Вернутся к ленте новостей</a>
-<a class="btn btn-primary " href="/perspage">Создать пост</a>
-<a class="btn btn-success " href="/logout">Выйти из аккаунта</a>
+<h3>Фотография не выбрана</h3>
+<a class="btn btn-secondary" href="/sample_file_upload">Выбрать фотографию</a>
+<p>{% else %}</p>
+<h3>Фотографии пока не отображаются</h3>
+<a class="btn btn-secondary" href="/sample_file_upload">Выбрать другую фотографию</a>
+<p>{% endif %}</p>
+<p><a class="btn btn-secondary " href="/perspage">Изменить данные пользователя</a></p>
+<p><a class="btn btn-secondary " href="/">Вернутся к ленте новостей</a></p>
+<p><a class="btn btn-secondary " href="/perspage">Создать пост</a></p>
+<p><a class="btn btn-secondary " href="/logout">Выйти из аккаунта</a></p>
 </body>
 </html>

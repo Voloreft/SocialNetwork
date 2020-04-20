@@ -2,8 +2,6 @@ import flask
 from flask import render_template, request
 from werkzeug.utils import redirect
 
-from data import db_session
-from data.users import User
 
 blueprint = flask.Blueprint('avaload_api', __name__,
                             template_folder='data/Pages')

@@ -10,16 +10,17 @@
           crossorigin="anonymous">
 </head>
 <body>
-{% if current_user.is_authenticated %}
-<a class="navbar-brand" href="/perspage">{{ current_user.nickname }}</a>
-{% else %}
-<p>
-    <a class="btn btn-success" href="/login">Войти</a>
-    <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
-</p>
-{% endif %}
-
-
+<nav class="navbar" style="background-color: #c0c0c0;">
+    <h1>Social Network for Artists and Connoisseurs</h1>
+    {% if current_user.is_authenticated %}
+    <a class="btn btn-secondary" href="/perspage">{{ current_user.nickname }}</a>
+    {% else %}
+    <p>
+        <a class="btn btn-secondary" href="/login">Войти</a>
+        <a class="btn btn-secondary " href="/register">Зарегистрироваться</a>
+    </p>
+    {% endif %}
+</nav>
 {% block content %}
 
 {% endblock %}

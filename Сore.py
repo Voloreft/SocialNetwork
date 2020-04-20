@@ -1,11 +1,11 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, jsonify
 from flask_login import LoginManager, login_required, logout_user
 from flask import make_response
 from werkzeug.utils import redirect
 from flask_restful import Api
 from Engine import UsersListResource, UserResource
 from data import db_session
-from data.Processings import Login, PersonalPage, Register, AvaLoad
+from data.Processings import Login, PersonalPage, Register, AvaLoad, WelcomePage
 from data.users import User
 import datetime
 
@@ -27,6 +27,7 @@ def main():
     app.register_blueprint(PersonalPage.blueprint)
     app.register_blueprint(Register.blueprint)
     app.register_blueprint(AvaLoad.blueprint)
+    app.register_blueprint(WelcomePage.blueprint)
     app.run(debug=False)
 
 
@@ -39,11 +40,6 @@ def load_user(id):
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-
-
-@app.route('/')
-def base():
-    return render_template('base.html', title='SNAC')
 
 
 @app.route('/logout')
