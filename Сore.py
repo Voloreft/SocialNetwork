@@ -13,10 +13,8 @@ app = Flask(__name__, template_folder='data/Pages')
 api = Api(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
-
 api.add_resource(UsersListResource, '/api/user')
 api.add_resource(UserResource, '/api/user/<int:user_id>')
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 
