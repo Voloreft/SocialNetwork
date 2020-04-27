@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+<div class="block_1">
+    <div class="card" style="width: 18rem;">
+        <img src="static/AvaPhoto/{{ current_user.id }}photo.jpg" class="card-img" alt="">
+        <div class="card-body">
+            <div class="alert alert-secondary" role="alert">
+                <h5 class="card-title">{{ current_user.nickname }}</h5>
+                <p class="card-text"><span class="badge badge-secondary">Ваш статус:</span>{{ current_user.status }}</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <a href="/edit" class="btn btn-outline-warning">Редактировать</a><a href="/file_upload" class="btn btn-outline-warning">Изменить фото</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
