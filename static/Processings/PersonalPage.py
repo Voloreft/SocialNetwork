@@ -10,4 +10,3 @@ blueprint.secret_key = 'yandexlyceum_secret_key'
 @blueprint.route('/perspage')
 def personalpage():
     return render_template('index.html', title=current_user.nickname)
-    #return render_template('PersonalPage.html')
