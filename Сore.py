@@ -3,11 +3,13 @@ from flask_login import LoginManager, login_required, logout_user
 from flask import make_response
 from werkzeug.utils import redirect
 from flask_restful import Api
-from Engine import UsersListResource, UserResource
+from Engine import UsersListResource, UserResource, PicturesListResource, PictureResource
 from data import db_session
 from data.Processings import Login, PersonalPage, Register, AvaLoad, WelcomePage
 from data.users import User
 import datetime
+
+
 
 app = Flask(__name__, template_folder='data/Pages')
 api = Api(app)
@@ -16,6 +18,9 @@ app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 
 api.add_resource(UsersListResource, '/api/user')
 api.add_resource(UserResource, '/api/user/<int:user_id>')
+
+api.add_resource(PicturesListResource, '/api/picture')
+api.add_resource(PictureResource, '/api/picture<int:picture_id>')
 
 login_manager = LoginManager()
 login_manager.init_app(app)

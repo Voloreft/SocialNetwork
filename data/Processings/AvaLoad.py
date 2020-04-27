@@ -1,6 +1,7 @@
 import flask
 from flask import render_template, request
 from werkzeug.utils import redirect
+from flask_login import current_user
 
 
 blueprint = flask.Blueprint('avaload_api', __name__,
@@ -13,6 +14,6 @@ def sample_file_upload():
     if request.method == 'GET':
         return render_template('AvaLoad.html')
     elif request.method == 'POST':
-        with open('data/AvaPhotos/photo.jpg', 'wb') as p:
+        with open(f'data/AvaPhotos/{current_user.id}photo.jpg', 'wb') as p:
             p.write(request.files['file'].read())
         return redirect('/perspage')
