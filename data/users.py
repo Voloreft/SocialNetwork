@@ -1,12 +1,14 @@
 import datetime
 import sqlalchemy
 from flask_login import UserMixin
+from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from data.db_session import SqlAlchemyBase
 
 
-class User(SqlAlchemyBase, UserMixin):
+class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
@@ -15,13 +17,15 @@ class User(SqlAlchemyBase, UserMixin):
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     email = sqlalchemy.Column(sqlalchemy.String,
                               index=True, unique=True, nullable=True)
-
+    about = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)
+    status = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="-")
+    picture = orm.relation('Picture')
 
     def __repr__(self):
-        return f'<Colonist> {self.id} {self.surname} {self.name}'
+        return f'<User> {self.id} {self.nickname} {self.name}'
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
