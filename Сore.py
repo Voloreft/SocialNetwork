@@ -5,13 +5,13 @@ from werkzeug.utils import redirect
 from flask_restful import Api
 from Engine import UsersListResource, UserResource, PicturesListResource, PictureResource
 from data import db_session
-from data.Processings import Login, PersonalPage, Register, AvaLoad, WelcomePage
+from static.Processings import WelcomePage, PersonalPage, AvaLoad, Login, Register
 from data.users import User
 import datetime
 
 
 
-app = Flask(__name__, template_folder='data/Pages')
+app = Flask(__name__, template_folder='static/Pages')
 api = Api(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
