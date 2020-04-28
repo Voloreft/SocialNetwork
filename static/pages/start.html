@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+<h1 align="center">Посты</h1>
+{% for item in pictures%}
+<div class="block_1">
+    <div class="col-md6 border rounded">
+        <h2>{{item.title}}</h2>
+        <img src="{{ item.picture_path }}" alt="">
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<h1>&nbsp;</h1>
+<h1>&nbsp;</h1>
+<h2 style="text-align: left; padding-left: 550px;">Добро пожаловать в SNAC.</h2>
+<h2 style="text-align: left; padding-left: 300px;">SNAC-это социальная сеть для художников всех уровней мастерстава.</h2>
+{% endif %}
+{% endblock %}
