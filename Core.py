@@ -1,5 +1,4 @@
 import os
-
 from flask import Flask, render_template, request, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask import make_response
@@ -11,7 +10,6 @@ from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 from flask_restful import Api
 from requests import get, post, put
-
 from data import db_session, picture_resource, user_resource
 from data.users import User
 import datetime
@@ -139,7 +137,7 @@ def sample_file_upload():
     if request.method == 'GET':
         return render_template('AvaLoad.html', title='Загрузка файла')
     elif request.method == 'POST':
-        with open(f'static/AvaPhoto/id{current_user.id}.jpg', 'wb') as p:
+        with open(f'static/AvaPhotos/id{current_user.id}.jpg', 'wb') as p:
             p.write(request.files['file'].read())
         return redirect('/index')
 

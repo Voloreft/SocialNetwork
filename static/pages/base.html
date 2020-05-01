@@ -2,42 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     <title>{{title}}</title>
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="static/css/style_3.css">
+    <link rel="stylesheet" type="text/css" href="static/css/style_4.css">
 </head>
 <body>
-<nav class="navbar" style="background-color: #c0c0c0; position: fixed; width: 1540px;">
+<nav class="navbar" style="background-color: #c0c0c0; ">
     <a class="navbar-brand" href="/">
-        <img src="static/img/sc.jpg" width="30" height="30" class="d-inline-block align-top" alt="">
+        <img src="static/img/sc.jpg" width="60" height="60" class="d-inline-block align-top" alt="">
     </a>
     {% if current_user.is_authenticated %}
-    <div class="dropdown" style="position: relative;  left: 590px;">
+    <div class="dropdown" >
         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Профиль
         </a>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
             <a class="dropdown-item" href="/index">Просмотр моего профиля</a>
             <a class="dropdown-item" href="/edit">Редактировать мой профиль</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/logout">Выход</a>
         </div>
     </div>
-    <div class="dropdown">
-        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Посты
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="/new_post">Новый пост</a>
-            <a class="dropdown-item" href="#">Мои посты</a>
-        </div>
-    </div>
+
     {% else %}
     <p>
         <a class="btn btn-secondary" href="/login">Войти</a>
