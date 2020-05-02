@@ -40,6 +40,7 @@ class PicturesListResource(Resource):
     def get(self):
         session = db_session.create_session()
         picture = session.query(Picture).all()
+        picture.reverse()
         return jsonify({'picture': [item.to_dict(
             only=('title', 'picture_path', 'user_id', 'id')) for item in picture]})
 

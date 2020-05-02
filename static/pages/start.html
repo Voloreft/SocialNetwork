@@ -3,16 +3,7 @@
 {% block content %}
 
 {% if current_user.is_authenticated %}
-<a class="btn btn-secondary" href="/new_post" style="position: relative;  left: 260px;">Написать пост</a>
-{% for item in pictures%}
-<div class="block_1">
-    <div class="col-md6 border rounded">
-        <img src="static/AvaPhotos/id{{ item.user_id }}.jpg" height="60" width="60" alt="">
-        <h3>{{item.title}}</h3>
-        <img src="{{ item.picture_path }}" height="600" alt="">
-    </div>
-</div>
-{% endfor %}
+<a href="/feed">f</a>
 {% else %}
 <h1>&nbsp;</h1>
 <h1>&nbsp;</h1>

@@ -79,8 +79,22 @@ def not_found(error):
 
 @app.route('/')
 def base():
-    return render_template('start.html', title='SNAC',
-                           pictures=get('http://localhost:5000/api/picture').json()['picture'])
+    if current_user.is_authenticated:
+        return redirect('/feed_n')
+    else:
+        return render_template('start.html', title='SNAC')
+
+
+@app.route('/feed_<sr>')
+def feed(sr):
+    if sr == 'n':
+        return render_template('workfeed.html', title='SNAC',
+                               pictures=get('http://localhost:5000/api/picture').json()['picture'])
+    elif sr == 'r':
+        pictures = get('http://localhost:5000/api/picture').json()['picture']
+        pictures.reverse()
+        return render_template('workfeed.html', title='SNAC',
+                               pictures=pictures)
 
 
 @app.route('/login', methods=['GET', 'POST'])
