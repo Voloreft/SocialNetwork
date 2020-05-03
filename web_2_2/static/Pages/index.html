@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<div class="container">
+    <div class="row justify-content-between">
+        <div class="col-sm-6 col-md-10">
+            <div class="card mb-3" style="max-width: 400px;">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <img src="static/AvaPhotos/id{{ current_user.id }}.jpg" class="card-img" alt="">
+                        <a class="btn btn-outline-dark btn-xs" href="/file_upload">Сменить фотографию</a>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ current_user.nickname }}</h5>
+                            <p class="card-text">Ваш статус: {{ current_user.status }}</p>
+                            <br>
+                            <p class="card-text"><small class="text-muted">---</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
