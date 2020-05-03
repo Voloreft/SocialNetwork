@@ -23,7 +23,7 @@ api.add_resource(user_resource.UsersListResource, '/api/user')
 api.add_resource(user_resource.UserResource, '/api/user/<int:user_id>')
 
 api.add_resource(picture_resource.PicturesListResource, '/api/picture')
-api.add_resource(picture_resource.PictureResource, '/api/picture<int:picture_id>')
+api.add_resource(picture_resource.PictureResource, '/api/picture/<int:picture_id>')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -190,7 +190,6 @@ def new_post():
     if form.validate_on_submit():
         iden = 1
         p = get('http://localhost:5000/api/picture').json()
-        print(p)
         if p['picture']:
             iden = p['picture'][-1]['id'] + 1
 
@@ -199,6 +198,13 @@ def new_post():
             'user_id': current_user.id,
             'picture_path': f'static/upload_files/{current_user.id}/{iden}.jpg'
         })
+
+        post('http://localhost:5000/api/mark', json={
+            'picture_id': iden,
+            'likes': 0,
+            'dislike': 0
+        })
+
         picture = form.photo.data
         picture.save(f'static/upload_files/{current_user.id}/{iden}.jpg')
         return redirect('/')
