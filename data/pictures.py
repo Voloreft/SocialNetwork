@@ -17,7 +17,6 @@ class Picture(SqlAlchemyBase, SerializerMixin):
     title = sqlalchemy.Column(sqlalchemy.String, default='Рисунок')
     picture_path = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     average_mark = sqlalchemy.Column(sqlalchemy.String)
-
     time_modified = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)
 
