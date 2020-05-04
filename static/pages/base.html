@@ -15,7 +15,7 @@
         <img src="static/img/sc.jpg" width="60" height="60" class="d-inline-block align-top" alt="">
     </a>
     {% if current_user.is_authenticated %}
-    <div class="dropdown" >
+    <div class="dropdown">
         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Профиль
@@ -37,9 +37,28 @@
 </nav>
 <h2>&nbsp;</h2>
 <h3>&nbsp;</h3>
-{% block content %}
+<div class="row">
+    <div class="col-md-2">
+        {% if current_user.is_authenticated %}
+        <p>
+            <img src="static/img/pp.jpg" width="30" height="30" class="d-inline-block align-top"
+                 style="position: relative; top: 5px; left: 5px;" alt="">
+            <a href="/index" style="color:#000000; font-size: 150%;">Моя страница</a>
+        </p>
+        <p>
+            <img src="static/img/wf.jpg" width="30" height="30" class="d-inline-block align-top"
+                 style="position: relative; top: 5px; left: 5px;" alt="">
+            <a href="/" style="color:#000000; font-size: 150%;">Новости</a>
+        </p>
+        {% endif %}
+    </div>
+    <div class="col-md-9">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <div class="col-md-1"></div>
+</div>
 
-{% endblock %}
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

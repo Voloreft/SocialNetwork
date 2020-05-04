@@ -58,7 +58,7 @@ class RegisterForm(FlaskForm):
 class NewPostForm(FlaskForm):
     title = StringField('Заголовок', validators=[DataRequired()])
     photo = FileField('Фото', validators=[FileRequired()])
-    submit = SubmitField('Отправить')
+    submit = SubmitField('Выложить')
 
 
 def main():
