@@ -43,22 +43,32 @@ class PictureResource(Resource):
         user_id = args['user_list'].split('_')[0]
 
         if int(args['likes']) == 1 and f'{user_id}_d' in picture.user_list:
-            picture.user_list.replace(f'{user_id}_d', '')
+            picture.user_list = picture.user_list.replace(f'{user_id}_d', '')
             picture.user_list += args['user_list'] + ' '
             picture.likes += 1
             picture.dislikes -= 1
         elif int(args['likes']) == 1 and f'{user_id}_l' not in picture.user_list:
             picture.user_list += args['user_list'] + ' '
             picture.likes += 1
+        elif int(args['likes']) == 1 and f'{user_id}_l' in picture.user_list:
+            picture.user_list = picture.user_list.replace(f'{user_id}_l', '')
+            picture.likes -= 1
 
-        elif int(args['dislikes']) == 1 and f'{user_id}_l' in picture.user_list:
-            picture.user_list.replace(f'{user_id}_l', '')
+        if int(args['dislikes']) == 1 and f'{user_id}_l' in picture.user_list:
+            picture.user_list = picture.user_list.replace(f'{user_id}_l', '')
             picture.user_list += args['user_list'] + ' '
             picture.dislikes += 1
             picture.likes -= 1
+            print(picture.user_list)
         elif int(args['dislikes']) == 1 and f'{user_id}_d' not in picture.user_list:
             picture.user_list += args['user_list'] + ' '
             picture.dislikes += 1
+            print(picture.user_list)
+        elif int(args['dislikes']) == 1 and f'{user_id}_d' in picture.user_list:
+            picture.user_list = picture.user_list.replace(f'{user_id}_d', '')
+            picture.dislikes -= 1
+            print(picture.user_list)
+
 
         session.commit()
         return jsonify({'success': 'OK'})
