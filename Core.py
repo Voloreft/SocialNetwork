@@ -23,7 +23,7 @@ api.add_resource(user_resource.UsersListResource, '/api/user')
 api.add_resource(user_resource.UserResource, '/api/user/<int:user_id>')
 
 api.add_resource(picture_resource.PicturesListResource, '/api/picture')
-api.add_resource(picture_resource.PictureResource, '/api/picture<int:picture_id>')
+api.add_resource(picture_resource.PictureResource, '/api/picture/<int:picture_id>')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
