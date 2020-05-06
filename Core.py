@@ -80,7 +80,7 @@ def not_found(error):
 @app.route('/')
 def base():
     if current_user.is_authenticated:
-        return redirect('/feed_n')
+        return redirect('/feed_p')
     else:
         return render_template('start.html', title='SNAC')
 
