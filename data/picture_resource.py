@@ -19,7 +19,9 @@ class PictureResource(Resource):
         session = db_session.create_session()
         picture = session.query(Picture).get(picture_id)
         return jsonify({'picture': picture.to_dict(
-            only=('title', 'picture_path', 'user_id', 'user.nickname', 'likes', 'dislikes', 'user_list'))})
+            only=(
+                'title', 'picture_path', 'user_id', 'user.nickname', 'user.ava_have', 'likes', 'dislikes',
+                'user_list'))})
 
     def delete(self, picture_id):
         abort_if_picture_not_found(picture_id)
@@ -78,7 +80,8 @@ class PicturesListResource(Resource):
         session = db_session.create_session()
         picture = session.query(Picture).all()
         return jsonify({'picture': [item.to_dict(
-            only=('title', 'picture_path', 'user_id', 'id', 'user.nickname', 'likes', 'dislikes', 'user_list')) for
+            only=('title', 'picture_path', 'user_id', 'id', 'user.nickname', 'user.ava_have', 'likes', 'dislikes',
+                  'user_list')) for
             item in picture]})
 
     def post(self):

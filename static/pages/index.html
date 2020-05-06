@@ -9,7 +9,11 @@
             <div class="card mb-3" style="max-width: 400px;">
                 <div class="row no-gutters">
                     <div class="col-md-4">
+                        {% if current_user.ava_have %}
                         <img src="static/AvaPhotos/id{{ current_user.id }}.jpg" class="card-img" alt="">
+                        {% else %}
+                        <img src="static/AvaPhotos/id0.jpg" class="card-img" alt="">
+                        {% endif %}
                         <a class="btn btn-outline-dark btn-xs" href="/file_upload">Сменить фотографию</a>
                     </div>
                     <div class="col-md-8">

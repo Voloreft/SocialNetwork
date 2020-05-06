@@ -22,6 +22,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)
     status = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="-")
+    ava_have = sqlalchemy.Column(sqlalchemy.String, default=False)
     picture = orm.relation('Picture')
 
     def __repr__(self):

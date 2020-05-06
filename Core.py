@@ -80,7 +80,7 @@ def not_found(error):
 @app.route('/')
 def base():
     if current_user.is_authenticated:
-        return redirect('/feed_n')
+        return redirect('/feed_p')
     else:
         return render_template('start.html', title='SNAC')
 
@@ -165,6 +165,12 @@ def sample_file_upload():
     elif request.method == 'POST':
         with open(f'static/AvaPhotos/id{current_user.id}.jpg', 'wb') as p:
             p.write(request.files['file'].read())
+        if not current_user.ava_have:
+            session = db_session.create_session()
+            ed_user = session.query(User).filter_by(id=current_user.id).one()
+            ed_user.ava_have = True
+            session.add(ed_user)
+            session.commit()
         return redirect('/index')
 
 
@@ -202,7 +208,6 @@ def new_post():
     if form.validate_on_submit():
         iden = 1
         p = get('http://localhost:5000/api/picture').json()
-        print(p)
         if p['picture']:
             iden = p['picture'][-1]['id'] + 1
 
