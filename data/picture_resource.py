@@ -69,7 +69,6 @@ class PictureResource(Resource):
             picture.dislikes -= 1
             print(picture.user_list)
 
-
         session.commit()
         return jsonify({'success': 'OK'})
 
@@ -78,7 +77,6 @@ class PicturesListResource(Resource):
     def get(self):
         session = db_session.create_session()
         picture = session.query(Picture).all()
-        picture.reverse()
         return jsonify({'picture': [item.to_dict(
             only=('title', 'picture_path', 'user_id', 'id', 'user.nickname', 'likes', 'dislikes', 'user_list')) for
             item in picture]})

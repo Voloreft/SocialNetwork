@@ -88,11 +88,23 @@ def base():
 @app.route('/feed_<sr>')
 def feed(sr):
     if sr == 'n':
-        return render_template('workfeed.html', title='SNAC',
-                               pictures=get('http://localhost:5000/api/picture').json()['picture'])
-    elif sr == 'r':
         pictures = get('http://localhost:5000/api/picture').json()['picture']
-        pictures.reverse()
+        pictures.sort(key=lambda new: new['id'], reverse=True)
+        return render_template('workfeed.html', title='SNAC',
+                               pictures=pictures)
+    elif sr == 'o':
+        pictures = get('http://localhost:5000/api/picture').json()['picture']
+        pictures.sort(key=lambda new: new['id'])
+        return render_template('workfeed.html', title='SNAC',
+                               pictures=pictures)
+    elif sr == 'p':
+        pictures = get('http://localhost:5000/api/picture').json()['picture']
+        pictures.sort(key=lambda popular: popular['likes'] - popular['dislikes'] * 0.9, reverse=True)
+        return render_template('workfeed.html', title='SNAC',
+                               pictures=pictures)
+    elif sr == 'unp':
+        pictures = get('http://localhost:5000/api/picture').json()['picture']
+        pictures.sort(key=lambda popular: popular['likes'] - popular['dislikes'] * 0.9)
         return render_template('workfeed.html', title='SNAC',
                                pictures=pictures)
 
