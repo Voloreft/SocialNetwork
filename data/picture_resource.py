@@ -81,7 +81,7 @@ class PicturesListResource(Resource):
         picture = session.query(Picture).all()
         return jsonify({'picture': [item.to_dict(
             only=('title', 'picture_path', 'user_id', 'id', 'user.nickname', 'user.ava_have', 'likes', 'dislikes',
-                  'user_list')) for
+                  'user_list', 'time_modified')) for
             item in picture]})
 
     def post(self):

@@ -10,7 +10,7 @@ from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 from flask_restful import Api
 from requests import get, post, put
-from data import db_session, picture_resource, user_resource
+from data import db_session, picture_resource, user_resource, date_reduction
 from data.users import User
 import datetime
 
@@ -89,16 +89,31 @@ def base():
 def feed(sr):
     if sr == 'n':
         pictures = get('http://localhost:5000/api/picture').json()['picture']
+        for pic in pictures:
+            a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
+            n = datetime.datetime.now()
+            d = n - a
+            pic['elapsed_time'] = date_reduction.reduct_date(d)
         pictures.sort(key=lambda new: new['id'], reverse=True)
         return render_template('workfeed.html', title='SNAC',
                                pictures=pictures)
     elif sr == 'o':
         pictures = get('http://localhost:5000/api/picture').json()['picture']
+        for pic in pictures:
+            a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
+            n = datetime.datetime.now()
+            d = n - a
+            pic['elapsed_time'] = date_reduction.reduct_date(d)
         pictures.sort(key=lambda new: new['id'])
         return render_template('workfeed.html', title='SNAC',
                                pictures=pictures)
     elif sr == 'p':
         pictures = get('http://localhost:5000/api/picture').json()['picture']
+        for pic in pictures:
+            a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
+            n = datetime.datetime.now()
+            d = n - a
+            pic['elapsed_time'] = date_reduction.reduct_date(d)
         pictures.sort(key=lambda popular: popular['likes'] - popular['dislikes'] * 0.9, reverse=True)
         return render_template('workfeed.html', title='SNAC',
                                pictures=pictures)
