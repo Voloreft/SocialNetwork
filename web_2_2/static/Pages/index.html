@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<div class="container">
+    <div class="row justify-content-between">
+        <div class="col-sm-6 col-md-10">
+            <div class="card mb-3" style="max-width: 400px;">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <img src="static/AvaPhotos/id{{ current_user.id }}.jpg" class="card-img" alt="">
+                        <a class="btn btn-outline-dark btn-xs" href="/file_upload">Сменить фотографию</a>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ current_user.nickname }}</h5>
+                            <p class="card-text">Ваш статус: {{ current_user.status }}</p>
+                            <br>
+                            <p class="card-text"><small class="text-muted">---</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3>Ваши посты</h3>
+
+    <br>
+
+    {% for item in pictures %}
+    <div class="block_1">
+        <div class="col-md6 border rounded">
+            <div><p><img src="static/AvaPhotos/id{{ current_user.id }}.jpg" height="60" width="60" alt=""
+                         class="rounded-circle"> {{
+                current_user.nickname }}</p>
+            </div>
+            <h3>{{item.title}}</h3>
+            <img src="{{ item.picture_path }}" height="600" alt="">
+        </div>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-outline-success btn-lg">
+                {% if current_user.id | string + '_l' in item.user_list %}
+                <input id="like_{{ item.id }}" type="radio" onclick="like(this)" value="{{ item.id }}" checked> {{
+                item.likes }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-thumbs-up">
+                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                </svg>
+                {% else %}
+                <input id="like_{{ item.id }}" type="radio" onclick="like(this)" value="{{ item.id }}"> {{ item.likes }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-thumbs-up">
+                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                </svg>
+                {% endif %}
+            </label>
+
+            <label class="btn btn-outline-secondary btn-lg">
+                {% if current_user.id | string + '_d' in item.user_list %}
+                <input id="dislike_{{ item.id }}" type="radio" onclick="dislike(this)" value="{{ item.id }}" checked> {{
+                item.dislikes }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-thumbs-down">
+                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+                </svg>
+                {% else %}
+                <input id="dislike_{{ item.id }}" type="radio" onclick="dislike(this)" value="{{ item.id }}"> {{
+                item.dislikes }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-thumbs-down">
+                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+                </svg>
+                {% endif %}
+            </label>
+            <button type="button" class="btn btn-outline-warning btn-lg" onclick="ydoli(this)"
+                    id="delete_{{ item.id }}" value="{{ item.id }}">
+                Удалить пост
+            </button>
+            <script>
+
+            function ydoli(event) {
+                var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+                var theUrl = `http://127.0.0.1:5000/api/picture/${event.value}`;
+                xmlhttp.open("DELETE", theUrl);
+                xmlhttp.send();
+            };
+
+            function dislike(event) {
+                let url;
+                url = `http://127.0.0.1:5000/api/picture/${event.value}`;
+
+
+
+                let pict = {
+                    likes: 0,
+                    dislikes: 1,
+                    user_list: '{{ current_user.id}}_d'
+                };
+
+                var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+                var theUrl = `http://127.0.0.1:5000/api/picture/${event.value}`;
+                xmlhttp.open("PUT", theUrl);
+                xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xmlhttp.send(JSON.stringify(pict));
+
+
+
+
+            };
+
+            function like(event) {
+                let url;
+                url = `http://127.0.0.1:5000/api/picture/${event.value}`;
+
+
+                let pict = {
+                    likes: 1,
+                    dislikes: 0,
+                    user_list: '{{ current_user.id}}_l'
+                };
+
+                var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+                var theUrl = `http://127.0.0.1:5000/api/picture/${event.value}`;
+                xmlhttp.open("PUT", theUrl);
+                xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xmlhttp.send(JSON.stringify(pict));
+
+            };
+
+
+
+
+            </script>
+        </div>
+        <br>
+        <br>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}
