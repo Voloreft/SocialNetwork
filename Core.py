@@ -8,11 +8,13 @@ from werkzeug.utils import redirect
 from wtforms import PasswordField, StringField, SubmitField, BooleanField, FileField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
-from flask_restful import Api
+from flask_restful import Api, abort
 from requests import get, post, put
 from data import db_session, picture_resource, user_resource, date_reduction
+from data.pictures import Picture
 from data.users import User
 import datetime
+from flask_ngrok import run_with_ngrok
 
 app = Flask(__name__, template_folder='static/pages')
 api = Api(app)
@@ -27,6 +29,8 @@ api.add_resource(picture_resource.PictureResource, '/api/picture/<int:picture_id
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+#run_with_ngrok(app)
 
 
 class LoginForm(FlaskForm):
@@ -235,6 +239,20 @@ def new_post():
         picture.save(f'static/upload_files/{current_user.id}/{iden}.jpg')
         return redirect('/')
     return render_template('newpost.html', title='Новый пост', form=form)
+
+
+@app.route('/post_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def posts_delete(id):
+    session = db_session.create_session()
+    news = session.query(Picture).filter(Picture.id == id,
+                                         Picture.user == current_user).first()
+    if news:
+        session.delete(news)
+        session.commit()
+    else:
+        abort(404)
+    return redirect('/')
 
 
 if __name__ == '__main__':

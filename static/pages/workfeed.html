@@ -8,8 +8,6 @@
 
 
 
-
-
 </script>
 {% if current_user.is_authenticated %}
 <nav class="navbar navbar-expand-lg" style="position: relative;  width:300px">
@@ -36,8 +34,23 @@
             <img src="static/AvaPhotos/id0.jpg" height="60" width="60" alt=""
                  class="rounded-circle">
             {% endif %}
-            <a >{{ item.user.nickname }}</a>
-            <a style="margin-left: 80%;">{{ item.elapsed_time }}</a></p>
+            <a>{{ item.user.nickname }}</a>
+            {% if current_user.is_authenticated and current_user.id == item.user_id %}
+            <a align="left" style="margin-left: 75%;">{{ item.elapsed_time }}</a>
+            <div class="dropdown" style="position: relative; left:95%; margin-bottom:-55px; bottom:65px;">
+                <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink" style="">
+                    <a class="dropdown-item disabled" href="#" >Изменить</a>
+                    <a class="dropdown-item" href="/post_delete/{{item.id}}"
+                       onclick="return confirm('Вы действительно хотите удалить этот пост?');">Удалить</a>
+                </div>
+            </div>
+            {% else %}
+            <a style="margin-left: 80%;">{{ item.elapsed_time }}</a>
+            {% endif %}
+            </p>
         </div>
         <h3>{{item.title}}</h3>
         <img src="{{ item.picture_path }}" style="heigth:100%; max-height:500px; width:auto;" alt="">
@@ -85,26 +98,17 @@
             function dislike(event) {
                 let url;
                 url = `http://127.0.0.1:5000/api/picture/${event.value}`;
-
-
-
                 let pict = {
                     likes: 0,
                     dislikes: 1,
                     user_list: '{{ current_user.id}}_d'
                 };
-
                 var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
                 var theUrl = `http://127.0.0.1:5000/api/picture/${event.value}`;
                 xmlhttp.open("PUT", theUrl);
                 xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 xmlhttp.send(JSON.stringify(pict));
-
-
-
-
             };
-
             function like(event) {
                 let url;
                 url = `http://127.0.0.1:5000/api/picture/${event.value}`;
@@ -123,6 +127,12 @@
                 xmlhttp.send(JSON.stringify(pict));
 
             };
+
+
+
+
+
+
 
 
 

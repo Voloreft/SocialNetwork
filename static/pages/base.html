@@ -37,7 +37,7 @@
 </nav>
 <h2>&nbsp;</h2>
 <h3>&nbsp;</h3>
-<div class="row">
+<div class="row" style="width:100%;">
     <div class="col-md-2">
         {% if current_user.is_authenticated %}
         <p>
@@ -53,7 +53,7 @@
         <p>
             <img src="static/img/vl.jpg" width="30" height="30" class="d-inline-block align-top"
                  style="position: relative; top: 5px; left: 5px;" alt="">
-            <a href="#" style="color:#000000; font-size: 150%;">Видео уроки</a>
+            <a href="#" style="pointer-events: none; cursor: default; color: #999; font-size: 150%;">Видео уроки</a>
         </p>
         {% endif %}
     </div>
