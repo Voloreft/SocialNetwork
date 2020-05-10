@@ -1,3 +1,6 @@
+DAWG-Python
+Flask
+Flask-Login
 Flask-RESTful
 Flask-WTF
 Jinja2
