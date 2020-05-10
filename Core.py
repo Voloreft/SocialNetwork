@@ -14,7 +14,6 @@ from data import db_session, picture_resource, user_resource, date_reduction
 from data.pictures import Picture
 from data.users import User
 import datetime
-from flask_ngrok import run_with_ngrok
 
 app = Flask(__name__, template_folder='static/pages')
 api = Api(app)
@@ -29,8 +28,6 @@ api.add_resource(picture_resource.PictureResource, '/api/picture/<int:picture_id
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-#run_with_ngrok(app)
 
 
 class LoginForm(FlaskForm):
@@ -86,7 +83,7 @@ def base():
     if current_user.is_authenticated:
         return redirect('/feed_p')
     else:
-        return render_template('start.html', title='SNfAaC')
+        return render_template('start.html', title='SNAC')
 
 
 @app.route('/feed_<sr>')
