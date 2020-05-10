@@ -86,7 +86,7 @@ def base():
     if current_user.is_authenticated:
         return redirect('/feed_p')
     else:
-        return render_template('start.html', title='SNAC')
+        return render_template('start.html', title='SNfAaC')
 
 
 @app.route('/feed_<sr>')
@@ -99,7 +99,7 @@ def feed(sr):
             d = n - a
             pic['elapsed_time'] = date_reduction.reduct_date(d)
         pictures.sort(key=lambda new: new['id'], reverse=True)
-        return render_template('workfeed.html', title='SNAC',
+        return render_template('workfeed.html', title='Лента работ',
                                pictures=pictures)
     elif sr == 'o':
         pictures = get('http://localhost:5000/api/picture').json()['picture']
@@ -109,7 +109,7 @@ def feed(sr):
             d = n - a
             pic['elapsed_time'] = date_reduction.reduct_date(d)
         pictures.sort(key=lambda new: new['id'])
-        return render_template('workfeed.html', title='SNAC',
+        return render_template('workfeed.html', title='Лента работ',
                                pictures=pictures)
     elif sr == 'p':
         pictures = get('http://localhost:5000/api/picture').json()['picture']
@@ -119,12 +119,12 @@ def feed(sr):
             d = n - a
             pic['elapsed_time'] = date_reduction.reduct_date(d)
         pictures.sort(key=lambda popular: popular['likes'] - popular['dislikes'] * 0.9, reverse=True)
-        return render_template('workfeed.html', title='SNAC',
+        return render_template('workfeed.html', title='Лента работ',
                                pictures=pictures)
     elif sr == 'unp':
         pictures = get('http://localhost:5000/api/picture').json()['picture']
         pictures.sort(key=lambda popular: popular['likes'] - popular['dislikes'] * 0.9)
-        return render_template('workfeed.html', title='SNAC',
+        return render_template('workfeed.html', title='Лента работ',
                                pictures=pictures)
 
 
