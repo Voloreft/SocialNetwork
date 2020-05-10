@@ -8,9 +8,10 @@ from werkzeug.utils import redirect
 from wtforms import PasswordField, StringField, SubmitField, BooleanField, FileField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
-from flask_restful import Api
+from flask_restful import Api, abort
 from requests import get, post, put
-from data import db_session, picture_resource, user_resource
+from data import db_session, picture_resource, user_resource, date_reduction
+from data.pictures import Picture
 from data.users import User
 import datetime
 
@@ -58,7 +59,7 @@ class RegisterForm(FlaskForm):
 class NewPostForm(FlaskForm):
     title = StringField('Заголовок', validators=[DataRequired()])
     photo = FileField('Фото', validators=[FileRequired()])
-    submit = SubmitField('Отправить')
+    submit = SubmitField('Выложить')
 
 
 def main():
@@ -80,23 +81,48 @@ def not_found(error):
 @app.route('/')
 def base():
     if current_user.is_authenticated:
-        return redirect('/feed_n')
+        return redirect('/feed_p')
     else:
         return render_template('start.html', title='SNAC')
 
 
 @app.route('/feed_<sr>')
 def feed(sr):
-    user = get(f'http://127.0.0.1:5000/api/user/{current_user.id}').json()['user']['followed'].split(';')
     if sr == 'n':
-        return render_template('workfeed.html', title='SNAC',
-                               pictures=get('http://localhost:5000/api/picture').json()['picture'],
-                               followed_user_list=user)
-    elif sr == 'r':
         pictures = get('http://localhost:5000/api/picture').json()['picture']
-        pictures.reverse()
-        return render_template('workfeed.html', title='SNAC',
-                               pictures=pictures, followed_user_list=user)
+        for pic in pictures:
+            a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
+            n = datetime.datetime.now()
+            d = n - a
+            pic['elapsed_time'] = date_reduction.reduct_date(d)
+        pictures.sort(key=lambda new: new['id'], reverse=True)
+        return render_template('workfeed.html', title='Лента работ',
+                               pictures=pictures)
+    elif sr == 'o':
+        pictures = get('http://localhost:5000/api/picture').json()['picture']
+        for pic in pictures:
+            a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
+            n = datetime.datetime.now()
+            d = n - a
+            pic['elapsed_time'] = date_reduction.reduct_date(d)
+        pictures.sort(key=lambda new: new['id'])
+        return render_template('workfeed.html', title='Лента работ',
+                               pictures=pictures)
+    elif sr == 'p':
+        pictures = get('http://localhost:5000/api/picture').json()['picture']
+        for pic in pictures:
+            a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
+            n = datetime.datetime.now()
+            d = n - a
+            pic['elapsed_time'] = date_reduction.reduct_date(d)
+        pictures.sort(key=lambda popular: popular['likes'] - popular['dislikes'] * 0.9, reverse=True)
+        return render_template('workfeed.html', title='Лента работ',
+                               pictures=pictures)
+    elif sr == 'unp':
+        pictures = get('http://localhost:5000/api/picture').json()['picture']
+        pictures.sort(key=lambda popular: popular['likes'] - popular['dislikes'] * 0.9)
+        return render_template('workfeed.html', title='Лента работ',
+                               pictures=pictures)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -155,6 +181,12 @@ def sample_file_upload():
     elif request.method == 'POST':
         with open(f'static/AvaPhotos/id{current_user.id}.jpg', 'wb') as p:
             p.write(request.files['file'].read())
+        if not current_user.ava_have:
+            session = db_session.create_session()
+            ed_user = session.query(User).filter_by(id=current_user.id).one()
+            ed_user.ava_have = True
+            session.add(ed_user)
+            session.commit()
         return redirect('/index')
 
 
@@ -182,24 +214,7 @@ def edit():
 @app.route('/index')
 @login_required
 def index():
-    pictures = get(f'http://127.0.0.1:5000/api/user/{current_user.id}').json()['user']['picture']
-    return render_template('index.html', title=current_user.nickname, pictures=pictures)
-
-
-@app.route('/index_users_<user_id>')
-@login_required
-def index_users(user_id):
-    user = get(f'http://127.0.0.1:5000/api/user/{user_id}').json()['user']
-    pictures = get(f'http://127.0.0.1:5000/api/user/{user_id}').json()['user']['picture']
-    pictures.reverse()
-    return render_template('index_users.html', title=user['nickname'], user=user, pictures=pictures)
-
-
-@app.route('/users_list')
-@login_required
-def users_list():
-    users = get(f'http://127.0.0.1:5000/api/user').json()['user']
-    return render_template('users_list.html', title='Пользовватели', users=users)
+    return render_template('index.html', title=current_user.nickname)
 
 
 @app.route('/new_post', methods=['POST', 'GET'])
@@ -208,21 +223,33 @@ def new_post():
     form = NewPostForm()
     if form.validate_on_submit():
         iden = 1
-        p = get('http://localhost:5000/api/picture').json()['picture']
-        p.reverse()
-        if p:
-            iden = p[-1]['id'] + 1
+        p = get('http://localhost:5000/api/picture').json()
+        if p['picture']:
+            iden = p['picture'][-1]['id'] + 1
 
         post('http://localhost:5000/api/picture', json={
             'title': form.title.data,
             'user_id': current_user.id,
             'picture_path': f'static/upload_files/{current_user.id}/{iden}.jpg'
         })
-
         picture = form.photo.data
         picture.save(f'static/upload_files/{current_user.id}/{iden}.jpg')
-        return redirect('/feed_n')
+        return redirect('/')
     return render_template('newpost.html', title='Новый пост', form=form)
+
+
+@app.route('/post_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def posts_delete(id):
+    session = db_session.create_session()
+    news = session.query(Picture).filter(Picture.id == id,
+                                         Picture.user == current_user).first()
+    if news:
+        session.delete(news)
+        session.commit()
+    else:
+        abort(404)
+    return redirect('/')
 
 
 if __name__ == '__main__':
