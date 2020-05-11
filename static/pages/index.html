@@ -29,6 +29,111 @@
             </div>
         </div>
     </div>
+    <h3>Ваши посты</h3>
+    <br>
+    {% for item in pictures %}
+    <div style="padding: 10px;">
+        <div class="col-md6 border rounded">
+            <div><p>{% if item.user.ava_have %}
+                <img src="static/AvaPhotos/id{{ item.user_id }}.jpg" height="60" width="60" alt=""
+                     class="rounded-circle">
+                {% else %}
+                <img src="static/AvaPhotos/id0.jpg" height="60" width="60" alt=""
+                     class="rounded-circle">
+                {% endif %}
+                <a>{{ item.user.nickname }}</a>
+                <a align="left" style="margin-left: 75%;">{{ item.elapsed_time }}</a>
+                <div class="dropdown" style="position: relative; left:95%; margin-bottom:-55px; bottom:65px;">
+                    <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink" style="">
+                        <a class="dropdown-item disabled" href="#">Изменить</a>
+                        <a class="dropdown-item" href="/post_delete/{{item.id}}"
+                           onclick="return confirm('Вы действительно хотите удалить этот пост?');">Удалить</a>
+                    </div>
+                </div>
+                </p>
+            </div>
+            <h3>{{item.title}}</h3>
+            <img src="{{ item.picture_path }}" style="heigth:100%; max-height:500px; width:auto;" alt="">
+        </div>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-light btn-lg">
+                {% if current_user.id | string + '_l' in item.user_list %}
+                <input id="like_{{ item.id }}" type="radio" onclick="like(this)" value="{{ item.id }}" checked> {{
+                item.likes }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-thumbs-up">
+                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                </svg>
+                {% else %}
+                <input id="like_{{ item.id }}" type="radio" onclick="like(this)" value="{{ item.id }}"> {{ item.likes }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-thumbs-up">
+                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                </svg>
+                {% endif %}
+            </label>
+
+            <label class="btn btn-light btn-lg" style="position: relative; left: 5px;">
+                {% if current_user.id | string + '_d' in item.user_list %}
+                <input id="dislike_{{ item.id }}" type="radio" onclick="dislike(this)" value="{{ item.id }}" checked> {{
+                item.dislikes }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-thumbs-down">
+                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+                </svg>
+                {% else %}
+                <input id="dislike_{{ item.id }}" type="radio" onclick="dislike(this)" value="{{ item.id }}"> {{
+                item.dislikes }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-thumbs-down">
+                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+                </svg>
+                {% endif %}
+            </label>
+            <script>
+            function dislike(event) {
+                let url;
+                url = `http://127.0.0.1:5000/api/picture/${event.value}`;
+                let pict = {
+                    likes: 0,
+                    dislikes: 1,
+                    user_list: '{{ current_user.id}}_d'
+                };
+                var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+                var theUrl = `http://127.0.0.1:5000/api/picture/${event.value}`;
+                xmlhttp.open("PUT", theUrl);
+                xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xmlhttp.send(JSON.stringify(pict));
+            };
+            function like(event) {
+                let url;
+                url = `http://127.0.0.1:5000/api/picture/${event.value}`;
+                let pict = {
+                    likes: 1,
+                    dislikes: 0,
+                    user_list: '{{ current_user.id}}_l'
+                };
+                var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+                var theUrl = `http://127.0.0.1:5000/api/picture/${event.value}`;
+                xmlhttp.open("PUT", theUrl);
+                xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xmlhttp.send(JSON.stringify(pict));
+            };
+
+            </script>
+        </div>
+        <br>
+        <br>
+    </div>
+    {% endfor %}
+
 </div>
 {% endif %}
 {% endblock %}

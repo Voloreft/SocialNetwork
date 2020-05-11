@@ -18,12 +18,15 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     email = sqlalchemy.Column(sqlalchemy.String,
                               index=True, unique=True, nullable=True)
     about = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    followed = sqlalchemy.Column(sqlalchemy.String, default='')
+    followers = sqlalchemy.Column(sqlalchemy.String, default='')
+    message = sqlalchemy.Column(sqlalchemy.String, default='')
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)
     status = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="-")
     ava_have = sqlalchemy.Column(sqlalchemy.String, default=False)
-    picture = orm.relation('Picture')
+    picture = orm.relation('Picture', back_populates='user')
 
     def __repr__(self):
         return f'<User> {self.id} {self.nickname} {self.name}'

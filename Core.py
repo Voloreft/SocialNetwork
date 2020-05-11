@@ -81,46 +81,39 @@ def not_found(error):
 @app.route('/')
 def base():
     if current_user.is_authenticated:
-        return redirect('/feed_p')
+        return redirect('/feed_p_a')
     else:
         return render_template('start.html', title='SNAC')
 
 
-@app.route('/feed_<sr>')
-def feed(sr):
-    if sr == 'n':
-        pictures = get('http://localhost:5000/api/picture').json()['picture']
+@app.route('/feed_<sr>_<sub>', methods=['POST', 'GET'])
+def feed(sr, sub):
+    subs = current_user.followed
+    pictures = get('http://localhost:5000/api/picture').json()['picture']
+    ###
+    for pic in pictures:
+        a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
+        n = datetime.datetime.now()
+        d = n - a
+        pic['elapsed_time'] = date_reduction.reduct_date(d)
+    picturs = list()
+    ###
+    if sub == 's':
         for pic in pictures:
-            a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
-            n = datetime.datetime.now()
-            d = n - a
-            pic['elapsed_time'] = date_reduction.reduct_date(d)
+            if str(pic['user_id']) in subs:
+                picturs.append(pic)
+        pictures = picturs
+    ##3
+    if sr == 'n':
         pictures.sort(key=lambda new: new['id'], reverse=True)
         return render_template('workfeed.html', title='Лента работ',
                                pictures=pictures)
     elif sr == 'o':
-        pictures = get('http://localhost:5000/api/picture').json()['picture']
-        for pic in pictures:
-            a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
-            n = datetime.datetime.now()
-            d = n - a
-            pic['elapsed_time'] = date_reduction.reduct_date(d)
         pictures.sort(key=lambda new: new['id'])
         return render_template('workfeed.html', title='Лента работ',
                                pictures=pictures)
     elif sr == 'p':
-        pictures = get('http://localhost:5000/api/picture').json()['picture']
-        for pic in pictures:
-            a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
-            n = datetime.datetime.now()
-            d = n - a
-            pic['elapsed_time'] = date_reduction.reduct_date(d)
         pictures.sort(key=lambda popular: popular['likes'] - popular['dislikes'] * 0.9, reverse=True)
-        return render_template('workfeed.html', title='Лента работ',
-                               pictures=pictures)
-    elif sr == 'unp':
-        pictures = get('http://localhost:5000/api/picture').json()['picture']
-        pictures.sort(key=lambda popular: popular['likes'] - popular['dislikes'] * 0.9)
         return render_template('workfeed.html', title='Лента работ',
                                pictures=pictures)
 
@@ -214,7 +207,13 @@ def edit():
 @app.route('/index')
 @login_required
 def index():
-    return render_template('index.html', title=current_user.nickname)
+    pictures = get(f'http://127.0.0.1:5000/api/user/{current_user.id}').json()['user']['picture']
+    for pic in pictures:
+        a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
+        n = datetime.datetime.now()
+        d = n - a
+        pic['elapsed_time'] = date_reduction.reduct_date(d)
+    return render_template('index.html', title=current_user.nickname, pictures=pictures)
 
 
 @app.route('/new_post', methods=['POST', 'GET'])
@@ -250,6 +249,15 @@ def posts_delete(id):
     else:
         abort(404)
     return redirect('/')
+
+
+@app.route('/index_users_<user_id>')
+@login_required
+def index_users(user_id):
+    user = get(f'http://127.0.0.1:5000/api/user/{user_id}').json()['user']
+    pictures = get(f'http://127.0.0.1:5000/api/user/{user_id}').json()['user']['picture']
+    pictures.reverse()
+    return render_template('index_users.html', title=user['nickname'], user=user, pictures=pictures)
 
 
 if __name__ == '__main__':
