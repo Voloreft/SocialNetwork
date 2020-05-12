@@ -208,12 +208,18 @@ def edit():
 @login_required
 def index():
     pictures = get(f'http://127.0.0.1:5000/api/user/{current_user.id}').json()['user']['picture']
+    followed = 0
+    followers = 0
+    if current_user.followed:
+        followed = len([i for i in current_user.followed.split(';') if i])
+    if current_user.followers:
+        followers = len([i for i in current_user.followers.split(';') if i])
     for pic in pictures:
         a = datetime.datetime.strptime(pic['time_modified'], '%Y-%m-%d %H:%M')
         n = datetime.datetime.now()
         d = n - a
         pic['elapsed_time'] = date_reduction.reduct_date(d)
-    return render_template('index.html', title=current_user.nickname, pictures=pictures)
+    return render_template('index.html', title=current_user.nickname, pictures=pictures, followed=followed, followers=followers)
 
 
 @app.route('/new_post', methods=['POST', 'GET'])
